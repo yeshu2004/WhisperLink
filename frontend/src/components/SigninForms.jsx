@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const SigninForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  const { login } = useAuth()
 
   async function loginUser(e){
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:8000/api/auth/login",{username, password})
-      localStorage.setItem("token", response.data.token); 
+      const response = await axios.post("http://localhost:8000/api/auth/login",{username, password}, {withCredentials: true})
+      console.log("Login response token:", response.data.token);
+      login(response.data.token);
       setUsername("");
       setPassword("");
       navigate("/"); 

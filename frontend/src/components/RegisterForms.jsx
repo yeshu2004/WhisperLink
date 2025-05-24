@@ -5,7 +5,9 @@ import axios from "axios";
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -25,12 +27,14 @@ const RegisterForm = () => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/auth/register",
-        { username, password }
+        { username, password, email }
       );
       localStorage.setItem("token", response.data.token); 
       setUsername("");
+      setEmail("");
       setPassword("");
       setConfirmPassword("");
+      
       navigate("/signin"); // Redirect to dashboard
     } catch (error) {
       setError(
@@ -45,10 +49,8 @@ const RegisterForm = () => {
         onSubmit={registerUser}
         className="flex flex-col gap-3 max-w-[350px] bg-white p-5 rounded-2xl w-full shadow-md"
       >
-        <p className="text-[28px] text-blue-600 font-semibold tracking-[-1px] relative flex items-center pl-8">
+        <p className="text-[28px] text-blue-600 font-semibold tracking-[-1px] relative flex">
           Register
-          <span className="absolute left-0 w-[18px] h-[18px] bg-blue-600 rounded-full" />
-          <span className="absolute left-0 w-[18px] h-[18px] bg-blue-600 rounded-full animate-ping opacity-70" />
         </p>
         <p className="text-sm text-gray-600">
           Signup now to create your Q&A links!
@@ -62,6 +64,14 @@ const RegisterForm = () => {
           required
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-400 rounded-lg outline-none focus:border-blue-600"
+        />
+        <input
+          type="text"
+          placeholder="Email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="w-full px-3 py-2 border border-gray-400 rounded-lg outline-none focus:border-blue-600"
         />
         <input

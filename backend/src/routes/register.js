@@ -6,18 +6,27 @@ const jwt = require("jsonwebtoken")
 
 router.post("/register", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
-    if (!username  || !password) {
+    if (!username) {
+      return res.status(400).json({ error: 'userName is required' });
+    }
+
+    if (!username  || !password || !email) {
       return res.status(400).json({ message: "All fields are required" });
     }
     if (password.length < 6) {
       return res.status(400).json({ error: "Password must be at least 6 characters" });
     }
 
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ message: "Username already taken" });
+    const existingUserEmail = await User.findOne({ email });
+    if (existingUserEmail) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const existingUsername = await User.findOne({username})
+    if(existingUsername){
+      return res.status(400).json({ message: "UserName already registered, Look for different User Name." });
     }
 
     //hash password
@@ -26,6 +35,7 @@ router.post("/register", async (req, res) => {
 
     const newUser = new User({
       username,
+      email,
       password: hashedPassword,
     });
     

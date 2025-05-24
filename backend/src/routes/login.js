@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
 
     console.log("Generated Token:", token);
     res.cookie("token", token, { httpOnly: true, secure: false });
-    res.status(201).json({ message: "User logged in successfully",username });
+    res.status(201).json({ message: "User logged in successfully",username , token});
 
   } catch (error) {
     console.error(error);
