@@ -15,6 +15,7 @@ const SigninForm = () => {
 
     try {
       const response = await axios.post("http://localhost:8000/api/auth/login",{username, password}, {withCredentials: true})
+      // console.log(response.data.username)
       console.log("Login response token:", response.data.token);
       login(response.data.token);
       setUsername("");
