@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const registerRoute = require('./routes/register.js')
 const loginUser = require("./routes/login.js")
 const genrateUrl = require("./routes/genrateurl.js")
+const listMsg = require("./routes/listmsg.js")
+const publicApiRoute = require("./routes/public-api-route.js")
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -25,6 +27,8 @@ dbConnection()
 app.use('/api/auth',registerRoute)
 app.use('/api/auth',loginUser)
 app.use('/api/url',genrateUrl)
+app.use('/api', publicApiRoute)
+app.use('/api', listMsg)
 
 app.get('/', isLoggedIn, async(req,res)=>{
     try {

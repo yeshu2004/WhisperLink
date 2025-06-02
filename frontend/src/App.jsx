@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import ListMsg from "./components/ListMsg";
 
 function App() {
   const { isAuthenticated, logout } = useAuth();
@@ -93,6 +94,8 @@ function App() {
                 <p>No URLs yet.</p>
               )}
             </div>
+
+            <ListMsg/>
           </>
         ) : (
           <>
