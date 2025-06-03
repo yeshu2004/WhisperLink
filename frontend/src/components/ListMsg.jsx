@@ -1,8 +1,31 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function ListMsg() {
-    const [messages, setMessages] = useState([]);
+  const { isAuthenticated } = useAuth();
+return (
+  <div className='p-4'>
+    { isAuthenticated ? <AllMsg/> : <AuthLinks/> }
+  </div>
+)
+}
+
+export default ListMsg;
+
+function AuthLinks() {
+  return (
+    <div className="flex items-center gap-5 underline">
+      <Link to="/register">Register</Link>
+      <Link to="/signin">SignIn</Link>
+    </div>
+  );
+}
+
+function AllMsg(){
+  const [messages, setMessages] = useState([]);
+  const [isfetching, setIsFetching] = useState(true)
 
   useEffect(() => {
     async function getAllMsg() {
@@ -13,6 +36,8 @@ function ListMsg() {
         setMessages(res.data);;
       } catch (err) {
         console.error("Error fetching messages", err);
+      } finally{
+        setIsFetching(()=> false)
       }
     }
     getAllMsg();
@@ -22,9 +47,15 @@ function ListMsg() {
     return () => clearInterval(intervalId); // cleanup on unmount
   }, []);
 
-return (
-    <div className='pt-10'>
-        <h2>Messages</h2>
+
+  if(isfetching){
+    return <div>Loading...</div>;
+  }
+
+  return(
+    <div className=''>
+      <Link to={'/'} className='text-sm underline'>Back to home</Link>
+      <h1 className='py-2'>Hi, lets see all the msg!</h1>
         <ul>
             {messages.length === 0 ? (
                 <li>No messages found.</li>
@@ -38,7 +69,5 @@ return (
             )}
         </ul>
     </div>
-)
+  )
 }
-
-export default ListMsg
