@@ -1,10 +1,7 @@
-import RegisterForm from "./components/RegisterForms";
-import SigninForm from "./components/SignInForms";
-import { Link, Links } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import ListMsg from "./components/ListMsg";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -32,7 +29,6 @@ function Dashboard() {
   const [user, setUser] = useState({});
   const [isFetching, setIsFetching] = useState(true);
 
-  const [links, setLinks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [generatedLink, setGeneratedLink] = useState("");
 
@@ -41,7 +37,6 @@ function Dashboard() {
       try {
        await axios.get("http://localhost:8000", { withCredentials: true }).then((res) => {
         setUser(res.data.user);
-        setLinks(res.data.links || []);
       })
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -62,7 +57,6 @@ function Dashboard() {
         { withCredentials: true }
       );
       setGeneratedLink(res.data.generate_url);
-      setLinks((prev) => [...prev, { generatedLink: res.data.generate_url }]);
     } catch (err) {
       console.error("Error generating url:", err);
     } finally {
@@ -107,16 +101,7 @@ function Dashboard() {
         </div>
 
         <div className="py-5">
-          <h3>Your URLs:</h3>
-          {links.length > 0 ? (
-            links.map((link, id) => (
-              <div key={id}>
-                <h2>{link.generatedLink}</h2>
-              </div>
-            ))
-          ) : (
-            <p>No URLs yet.</p>
-          )}
+          <Link to={"/allLinks"}>Manage your url's</Link>
         </div>
 
         <Link  to={'/messages'}>View all message</Link>

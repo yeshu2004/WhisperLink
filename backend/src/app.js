@@ -8,6 +8,7 @@ const loginUser = require("./routes/login.js")
 const logoutUser = require("./routes/logout.js")
 const genrateUrl = require("./routes/genrateurl.js")
 const listMsg = require("./routes/listmsg.js")
+const deleteOperation = require("./routes/deleteOperation.js")
 const publicApiRoute = require("./routes/public-api-route.js")
 
 app.use(cors({
@@ -31,6 +32,7 @@ app.use('/api/url',genrateUrl)
 app.use('/api', publicApiRoute)
 app.use('/api', listMsg)
 app.use('/api', logoutUser)
+app.use('/api/delete', deleteOperation)
 
 
 app.get('/', isLoggedIn, async(req,res)=>{

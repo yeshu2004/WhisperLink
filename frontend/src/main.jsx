@@ -8,6 +8,7 @@ import SigninForm from './components/SignInForms.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import GeneratedLinkPage from './components/GeneratedLinkPage.jsx';
 import ListMsg from './components/ListMsg.jsx';
+import ManageLinks from './components/ManageLinks.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/signin" element={<SigninForm />} />
         <Route path="/:linkName" element={<GeneratedLinkPage />} />
         <Route path="/messages" element={<ListMsg />} />
+        <Route path="/allLinks" element={<ManageLinks />} />
       </Routes>
     </AuthProvider>
     </BrowserRouter>

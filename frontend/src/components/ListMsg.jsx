@@ -33,6 +33,7 @@ function AllMsg(){
         const res = await axios.get("http://localhost:8000/api/list-msg", {
           withCredentials: true 
         });
+        console.log(res.data)
         setMessages(res.data);;
       } catch (err) {
         console.error("Error fetching messages", err);
@@ -42,9 +43,9 @@ function AllMsg(){
     }
     getAllMsg();
 
-    // bad pooling methord....later webSockets !!
-    const intervalId = setInterval(getAllMsg, 5000);
-    return () => clearInterval(intervalId); // cleanup on unmount
+    // // bad way - pooling methord....later webSockets !!
+    // const intervalId = setInterval(getAllMsg, 5000);
+    // return () => clearInterval(intervalId); // cleanup on unmount
   }, []);
 
 
