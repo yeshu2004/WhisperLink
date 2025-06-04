@@ -40,7 +40,7 @@ app.get('/', isLoggedIn, async(req,res)=>{
     const loginUser = await User.findById(req.user.userid ).select("-password");
     if (!loginUser) return res.status(404).json({ message: "User not found" });
 
-    const allLinks = await generatedLinks.find({owner: loginUser._id})
+    const allLinks = await generatedLinks.find({owner: loginUser._id}).sort({generatedLink: -1})
     res.status(200).json({user: loginUser, links: allLinks});
   } catch (err) {
     console.error(err);
