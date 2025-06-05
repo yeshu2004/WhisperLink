@@ -8,8 +8,9 @@ const loginUser = require("./routes/login.js")
 const logoutUser = require("./routes/logout.js")
 const genrateUrl = require("./routes/genrateurl.js")
 const listMsg = require("./routes/listmsg.js")
-const deleteOperation = require("./routes/deleteOperation.js")
 const publicApiRoute = require("./routes/public-api-route.js")
+require('./jobs/softDeleteLinks.js')
+require('./jobs/hardDeleteLink.js')
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -32,7 +33,6 @@ app.use('/api/url',genrateUrl)
 app.use('/api', publicApiRoute)
 app.use('/api', listMsg)
 app.use('/api', logoutUser)
-app.use('/api/delete', deleteOperation)
 
 
 app.get('/', isLoggedIn, async(req,res)=>{
@@ -40,7 +40,7 @@ app.get('/', isLoggedIn, async(req,res)=>{
     const loginUser = await User.findById(req.user.userid ).select("-password");
     if (!loginUser) return res.status(404).json({ message: "User not found" });
 
-    const allLinks = await generatedLinks.find({owner: loginUser._id}).sort({generatedLink: -1})
+    const allLinks = await generatedLinks.find({owner: loginUser._id, deleted: false}).sort({generatedLink: -1})
     res.status(200).json({user: loginUser, links: allLinks});
   } catch (err) {
     console.error(err);

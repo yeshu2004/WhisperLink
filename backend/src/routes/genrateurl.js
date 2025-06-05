@@ -12,12 +12,18 @@ router.post("/generate", isLoggedIn, async (req,res)=>{
     const suffix = Date.now() + '-' + Math.random().toString(36).substr(2, 6);
     const generate_url = `http://localhost:5173/${loginUser.username}${suffix}` 
 
-    const urlExists = await generatedLinks.findOne({generate_url})
+    const urlExists = await generatedLinks.findOne({generatedLink: generate_url})
     if(urlExists) return res.status(409).json({ message: "URL already exists, try again" })
+
+    const threeDaysLater = new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000);
+    const sevenDaysLater = new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000);
 
     const storedURL = await generatedLinks({
         owner: loginUser._id,
-        generatedLink: generate_url
+        generatedLink: generate_url,
+        deleted: false,
+        expireAt: threeDaysLater,
+        hardDeleteAt: sevenDaysLater  
     })
 
     await storedURL.save();

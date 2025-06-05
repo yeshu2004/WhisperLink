@@ -26,7 +26,6 @@ function ViewLinks() {
 
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState("");
-  const [deletingId, setDeletingId] = useState(null)
 
   useEffect(() => {
     async function getUrls() {
@@ -47,23 +46,6 @@ function ViewLinks() {
 
     getUrls();
   }, []);
-
-   const deleteLink = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this link?")) return;
-
-    try {
-      setDeletingId(id);
-      await axios.delete(`http://localhost:8000/api/delete/links/${id}`, {
-        withCredentials: true,
-      });
-      setLinks((prev) => prev.filter((link) => link._id !== id));
-    } catch (err) {
-      console.error("Failed to delete link", err);
-      alert("Error deleting link. Please try again.");
-    } finally {
-      setDeletingId(null);
-    }
-  };
 
   if (fetching) {
     return <div className="">Loading...</div>;
@@ -100,17 +82,6 @@ function ViewLinks() {
                     <h3 className="text-sm text-gray-400 italic">
                       createdAt ~ {new Date(link.createdAt).toLocaleString()}
                     </h3>
-                    <button
-                      onClick={() => deleteLink(link._id)}
-                      disabled={deletingId === link._id}
-                      className={`px-2 py-1 rounded text-white text-sm ${
-                        deletingId === link._id
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-red-500 hover:bg-red-600"
-                      }`}
-                    >
-                      {deletingId === link._id ? "Deleting..." : "Delete"}
-                    </button>
                     </div>
                     
                   </div>
