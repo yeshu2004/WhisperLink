@@ -15,6 +15,7 @@ const sendMgs = async (req, res) => {
 
     const newMsg = new messageSchema({
       toUser: link.owner,
+      linkAttached: link._id,
       message: encryptedMsg.content,
       iv: encryptedMsg.iv,
     });

@@ -2,14 +2,13 @@ import { Link } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import AudioLinkPage from "./components/AudioRecorder";
 
 function App() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="p-4">
-      {isAuthenticated ? <Dashboard />: <AuthLinks/>}
-    </div>
+    <div className="p-4">{isAuthenticated ? <Dashboard /> : <AuthLinks />}</div>
   );
 }
 
@@ -35,18 +34,19 @@ function Dashboard() {
   useEffect(() => {
     async function fetchUserData() {
       try {
-       await axios.get("http://localhost:8000", { withCredentials: true }).then((res) => {
-        setUser(res.data.user);
-      })
+        await axios
+          .get("http://localhost:8000", { withCredentials: true })
+          .then((res) => {
+            setUser(res.data.user);
+          });
       } catch (error) {
         console.error("Error fetching user:", error);
-      } finally{
-        setIsFetching(()=> false)
+      } finally {
+        setIsFetching(() => false);
       }
     }
-    fetchUserData()
+    fetchUserData();
   }, []);
-
 
   async function generateURL() {
     setIsLoading(() => true);
@@ -72,7 +72,7 @@ function Dashboard() {
     <div>
       <button
         className="cursor-pointer underline"
-        onClick={async() => {
+        onClick={async () => {
           await logout();
         }}
       >
@@ -99,12 +99,10 @@ function Dashboard() {
             </div>
           )}
         </div>
-
-        <div className="py-5">
-          <Link to={"/allLinks"}>Manage your url's</Link>
+        <div className="py-5 flex items-center gap-5">
+            <Link to={"/allLinks"}>Manage your url's</Link>
+            <Link to={"/messages"}>View all message</Link>
         </div>
-
-        <Link  to={'/messages'}>View all message</Link>
       </>
     </div>
   );

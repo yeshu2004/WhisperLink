@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import AudioRecorder from "./AudioRecorder";
 
 function GeneratedLinkPage() {
   const { linkName } = useParams();
@@ -31,11 +32,14 @@ function GeneratedLinkPage() {
   return (
     <div className="p-6">
       <h1 className="text-2xl mb-4">
-        Send an anonymous message to <span className="text-blue-500">{owner}</span>
+        Let's be anonymous to <span className="text-blue-500">{owner}</span>
       </h1>
-      <form onSubmit={handleSubmit}>
+      
+      {/* for text based input...*/}
+      <h1 className="text-xl">Send an Text wisper...</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col">
         <textarea
-          className="w-full border rounded p-2 mb-4"
+          className="w-1/3 border rounded p-2 mb-4"
           rows="5"
           placeholder="Write your message..."
           value={message}
@@ -44,12 +48,15 @@ function GeneratedLinkPage() {
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-fit"
         >
           Send Anonymously
         </button>
       </form>
-      {/* {feedback && <p className="mt-4 text-green-600">{feedback}</p>} */}
+      <h1 className="pt-5 pb-2 text-xl">Share a Audio wisper...</h1>
+
+      {/* for  audio notes input...*/}      
+      <AudioRecorder/>
     </div>
   );
 }
