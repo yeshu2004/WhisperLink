@@ -7,7 +7,7 @@ const linkData =  async (req, res) => {
     console.log(fullUrl);
 
     const linkData = await generatedLinks
-      .findOne({ generatedLink: fullUrl })
+      .findOne({ linkId: req.params.linkName})
       .populate("owner", "-password");
     console.log(linkData);
     if (!linkData) return res.status(404).json({ message: "Link not found" });

@@ -6,7 +6,7 @@ const linkSchema = new mongoose.Schema({
    type: mongoose.Schema.Types.ObjectId,
    ref: "User"
  },
-  generatedLink: { 
+  linkId: { 
     type: String,
     required: true,
     unique: true,

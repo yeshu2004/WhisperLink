@@ -56,6 +56,8 @@ function Dashboard() {
         {},
         { withCredentials: true }
       );
+      console.log(res.data);
+      
       setGeneratedLink(res.data.generate_url);
     } catch (err) {
       console.error("Error generating url:", err);

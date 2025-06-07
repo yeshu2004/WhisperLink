@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
+import axios from "axios";
 
-function AudioRecorder() {
+function AudioRecorder({ owner }) {
   const [recording, setRecording] = useState(false);
   const [timer, setTimer] = useState(0);
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -50,12 +51,13 @@ function AudioRecorder() {
 
   const uploadToS3 = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/audio/generate-upload-url");
-      if (!res.ok) {
-        throw new Error(`Server responded with status ${res.status}`);
-      }
+      const res = await axios.post(
+        "http://localhost:8000/api/audio/generate-upload-url",
+        { owner }
+      );
+
       // eslint-disable-next-line no-unused-vars
-      const { url, key } = await res.json();
+      const { url, key } = res.data;
 
       const uploadRes = await fetch(url, {
         method: "PUT",

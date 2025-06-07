@@ -7,7 +7,7 @@ const sendMgs = async (req, res) => {
   const { message } = req.body;
 
   try {
-    const link = await generatedLinks.findOne({ generatedLink: fullURL });
+    const link = await generatedLinks.findOne({ url_id: req.params.linkName });
     if (!link) return res.status(404).json({ message: "Invalid link" });
 
     if (!message) return res.status(400).json({ message: "message is empty" });

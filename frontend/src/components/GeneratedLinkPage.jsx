@@ -7,6 +7,7 @@ function GeneratedLinkPage() {
   const { linkName } = useParams();
   const [message, setMessage] = useState("");
   const [owner, setOwner] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
@@ -14,6 +15,7 @@ function GeneratedLinkPage() {
         const res = await axios.get(`http://localhost:8000/api/link/${linkName}`);
         console.log(res.data)
         setOwner(()=> res.data.username)
+        setLoading(()=>false)
       } catch (err) {
         console.error("Error fetching link data", err);
       }
@@ -27,6 +29,12 @@ function GeneratedLinkPage() {
      const res = await axios.post(`http://localhost:8000/api/send-msg/${linkName}`,{message})
      alert(res.data.message)
      setMessage("")
+  }
+
+  if(loading){
+    return(
+      <div className="p-4">Loading....</div>
+    )
   }
 
   return (
@@ -56,7 +64,7 @@ function GeneratedLinkPage() {
       <h1 className="pt-5 pb-2 text-xl">Share a Audio wisper...</h1>
 
       {/* for  audio notes input...*/}      
-      <AudioRecorder/>
+      {owner && <AudioRecorder owner={owner} />}
     </div>
   );
 }
