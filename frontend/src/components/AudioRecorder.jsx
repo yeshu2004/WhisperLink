@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
-function AudioRecorder({ owner }) {
+function AudioRecorder({ owner, ownerId, linkName }) {
   const [recording, setRecording] = useState(false);
   const [timer, setTimer] = useState(0);
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -51,9 +51,9 @@ function AudioRecorder({ owner }) {
 
   const uploadToS3 = async () => {
     try {
-      const res = await axios.post(
+      const res = await axios.get(
         "http://localhost:8000/api/audio/generate-upload-url",
-        { owner }
+        { params: { owner, ownerId, linkName } }
       );
 
       // eslint-disable-next-line no-unused-vars

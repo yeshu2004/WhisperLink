@@ -7,6 +7,8 @@ function GeneratedLinkPage() {
   const { linkName } = useParams();
   const [message, setMessage] = useState("");
   const [owner, setOwner] = useState(null);
+  const [ownerId, setOwnerId] = useState(null);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +17,7 @@ function GeneratedLinkPage() {
         const res = await axios.get(`http://localhost:8000/api/link/${linkName}`);
         console.log(res.data)
         setOwner(()=> res.data.username)
+        setOwnerId(()=>res.data._id)
         setLoading(()=>false)
       } catch (err) {
         console.error("Error fetching link data", err);
@@ -23,6 +26,8 @@ function GeneratedLinkPage() {
 
     fetchData();
   },[linkName]);
+
+  // console.log({ owner, ownerId, linkName });
 
   const handleSubmit = async (e) => {
      e.preventDefault();
@@ -64,7 +69,7 @@ function GeneratedLinkPage() {
       <h1 className="pt-5 pb-2 text-xl">Share a Audio wisper...</h1>
 
       {/* for  audio notes input...*/}      
-      {owner && <AudioRecorder owner={owner} />}
+      {owner &&  ownerId && linkName && <AudioRecorder owner={owner} ownerId={ownerId} linkName={linkName} />}
     </div>
   );
 }
