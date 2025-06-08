@@ -1,8 +1,8 @@
 const { GetObjectCommand } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const client = require("../aws/awsClient");
-const { configDotenv } = require("dotenv");
+const { default: client } = require("../awsClient"); 
 
+const { configDotenv } = require("dotenv");
 configDotenv()
 
 async function getFile(key) {
@@ -13,6 +13,7 @@ async function getFile(key) {
                 Key: key,
         })
         const url = await getSignedUrl(client, command, {expiresIn: 3600})
+        return url;
     } catch (error) {
         console.error("Error getting signed URL:", error);
         throw error;

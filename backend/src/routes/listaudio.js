@@ -1,6 +1,8 @@
 const express = require("express");
 const isLoggedIn = require("../middleware/auth.middleware");
 const getFile = require("../aws/s3/getFile");
+const User = require("../models/userschema");
+const audioschema = require("../models/audioschema");
 const router = express.Router();
 
 router.get("/audio/allWispers", isLoggedIn, async (req, res) => {
@@ -12,8 +14,10 @@ router.get("/audio/allWispers", isLoggedIn, async (req, res) => {
 
     const audioNotesWithUrls = await Promise.all(
       audioNotes.map(async (note) => {
-        const key = `uploads/${note.toUser}/${note.audiolinkId}.mp4`;
-        const url = getFile(key);
+        const key = `uploads/${loginUser.username}/${note.audiolinkId}.mp4`;
+        const url = await getFile(key);
+        console.log(url);
+        
         return {
           id: note._id,
           url,

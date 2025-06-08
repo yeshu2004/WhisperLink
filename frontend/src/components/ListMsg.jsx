@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ListAudioMsg from './ListAudioMsg';
 
 function ListMsg() {
   const { isAuthenticated } = useAuth();
@@ -69,6 +70,10 @@ function AllMsg(){
                 ))
             )}
         </ul>
+        <div>
+          <h1 className='mt-20'>Audio Wisper...</h1>
+          <ListAudioMsg/>
+        </div>
     </div>
   )
 }

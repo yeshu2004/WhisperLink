@@ -8,7 +8,9 @@ const loginUser = require("./routes/login.js")
 const logoutUser = require("./routes/logout.js")
 const genrateUrl = require("./routes/genrateurl.js")
 const listMsg = require("./routes/listmsg.js")
+const listAudio = require("./routes/listaudio.js")
 const publicApiRoute = require("./routes/public-api-route.js")
+
 require('./jobs/softDeleteLinks.js')
 require('./jobs/hardDeleteLink.js')
 
@@ -33,6 +35,7 @@ app.use('/api/url',genrateUrl)
 app.use('/api', publicApiRoute)
 app.use('/api', listMsg)
 app.use('/api', logoutUser)
+app.use('/api', listAudio)
 
 
 app.get('/', isLoggedIn, async(req,res)=>{
