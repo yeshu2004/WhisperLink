@@ -3,7 +3,7 @@ const messageSchema = require("../models/messageschema");
 const { encrypt } = require("../utils/encryption");
 
 const sendMgs = async (req, res) => {
-  const fullURL = `http://localhost:5173/${req.params.linkName}`;
+  const fullURL = `http://localhost:8080/${req.params.linkName}`; //port linked to docker.
   const { message } = req.body;
 
   try {

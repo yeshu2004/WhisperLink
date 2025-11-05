@@ -1,6 +1,5 @@
 # WhisperLink
 
-![WhisperLink Logo](https://via.placeholder.com/150.png?text=WhisperLink)  
 *Drop questions in the shadows, answer in the light.*
 
 **WhisperLink** is a sleek, anonymous Q&A platform built with the MERN stack. Creators craft shareable links (e.g., `whisperlink.com/username`), invite anonymous questions, and respond publicly or privately—all while keeping the experience fun, safe, and toxic-free. Whether it’s spilling secrets or sparking curiosity, WhisperLink connects people through the power of anonymity.

@@ -15,7 +15,7 @@ require('./jobs/softDeleteLinks.js')
 require('./jobs/hardDeleteLink.js')
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:8080",
     credentials: true,
 }));
 
