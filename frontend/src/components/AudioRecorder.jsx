@@ -1,47 +1,72 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import {
+  Mic,
+  Square,
+  Upload,
+  RotateCcw,
+  Loader2,
+} from "lucide-react";
 
 function AudioRecorder({ owner, ownerId, linkName }) {
   const [recording, setRecording] = useState(false);
   const [timer, setTimer] = useState(0);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [audioBlob, setAudioBlob] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
   const audioChunksRef = useRef([]);
 
   useEffect(() => {
     let interval;
+
     if (recording) {
-      interval = setInterval(() => setTimer((t) => t + 1), 1000);
-    } else {
-      clearInterval(interval);
+      interval = setInterval(() => {
+        setTimer((prev) => prev + 1);
+      }, 1000);
     }
+
     return () => clearInterval(interval);
   }, [recording]);
 
   const formatTime = (seconds) => {
-    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
-    const s = String(seconds % 60).padStart(2, "0");
-    return `${m}:${s}`;
+    const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const secs = String(seconds % 60).padStart(2, "0");
+    return `${mins}:${secs}`;
   };
 
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
-    audioChunksRef.current = [];
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
 
-    recorder.ondataavailable = (e) => {
-      audioChunksRef.current.push(e.data);
-    };
+      const recorder = new MediaRecorder(stream);
 
-    recorder.onstop = () => {
-      const blob = new Blob(audioChunksRef.current, { type: "audio/mp4" });
-      setAudioBlob(blob);
-      setTimer(0);
-    };
+      audioChunksRef.current = [];
 
-    recorder.start();
-    setMediaRecorder(recorder);
-    setRecording(true);
+      recorder.ondataavailable = (e) => {
+        audioChunksRef.current.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(audioChunksRef.current, {
+          type: "audio/mp4",
+        });
+
+        setAudioBlob(blob);
+        setTimer(0);
+
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      recorder.start();
+
+      setMediaRecorder(recorder);
+      setRecording(true);
+    } catch (err) {
+      alert("Microphone permission denied.");
+    }
   };
 
   const stopRecording = () => {
@@ -51,29 +76,42 @@ function AudioRecorder({ owner, ownerId, linkName }) {
 
   const uploadToS3 = async () => {
     try {
+      setUploading(true);
+
       const res = await axios.get(
         "http://localhost:8000/api/audio/generate-upload-url",
-        { params: { owner, ownerId, linkName } }
+        {
+          params: {
+            owner,
+            ownerId,
+            linkName,
+          },
+        }
       );
 
-      // eslint-disable-next-line no-unused-vars
-      const { url, key } = res.data;
+      const { url } = res.data;
 
       const uploadRes = await fetch(url, {
         method: "PUT",
-        headers: { "Content-Type": "audio/mp4" },
+        headers: {
+          "Content-Type": "audio/mp4",
+        },
         body: audioBlob,
       });
 
       if (!uploadRes.ok) {
-        throw new Error(`Upload failed with status ${uploadRes.status}`);
+        throw new Error("Upload failed");
       }
 
-      alert("Upload successful!");
+      alert("Whisper shared successfully!");
+
       setAudioBlob(null);
+      setTimer(0);
     } catch (err) {
-      console.error("Upload error:", err);
-      alert(`Upload failed: ${err.message || "Unknown error"}`);
+      console.error(err);
+      alert("Upload failed.");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -83,55 +121,98 @@ function AudioRecorder({ owner, ownerId, linkName }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[50vh] bg-black text-white w-1/2">
-      <div className="mb-6 text-2xl font-mono">{formatTime(timer)}</div>
+    <div className="flex flex-col items-center">
+
+      {/* Timer */}
+
+      <h1 className="mb-6 font-mono text-5xl font-bold tracking-widest text-zinc-800">
+        {formatTime(timer)}
+      </h1>
+
+      {/* Recording Button */}
 
       {!recording && !audioBlob && (
-        <button
-          onClick={startRecording}
-          className="bg-red-600 w-20 h-20 rounded-full shadow-lg animate-pulse hover:scale-105 transition"
-        >
-          <div className="w-4 h-4 mx-auto my-auto rounded-full bg-white mt-6"></div>
-        </button>
+        <>
+          <button
+            onClick={startRecording}
+            className="group flex h-28 w-28 items-center justify-center rounded-full bg-red-500 text-white shadow-xl transition duration-300 hover:scale-105 hover:bg-red-600"
+          >
+            <Mic
+              size={38}
+              className="group-hover:scale-110 transition"
+            />
+          </button>
+
+          <p className="mt-5 text-sm text-zinc-500">
+            Tap the microphone to start recording.
+          </p>
+        </>
       )}
+
+      {/* Recording */}
 
       {recording && (
-        <button
-          onClick={stopRecording}
-          className="w-20 h-20 bg-white text-red-600 rounded-full shadow-xl hover:scale-105 transition flex items-center justify-center"
-        >
-          ⏹
-        </button>
+        <>
+          <button
+            onClick={stopRecording}
+            className="flex h-28 w-28 animate-pulse items-center justify-center rounded-full bg-black text-white shadow-xl transition hover:scale-105"
+          >
+            <Square fill="white" size={34} />
+          </button>
+
+          <p className="mt-5 font-medium text-red-500">
+            Recording...
+          </p>
+        </>
       )}
 
-      <p className="mt-4 text-gray-400">
-        {recording
-          ? "Recording..."
-          : audioBlob
-          ? "Here's your recording"
-          : "Tap to record"}
-      </p>
+      {/* Preview */}
 
       {audioBlob && (
-        <div className="mt-6 text-center flex flex-col items-center justify-center">
+        <div className="mt-10 w-full max-w-lg rounded-2xl border border-zinc-200 bg-zinc-50 p-6">
+
+          <h3 className="mb-4 text-lg font-semibold">
+            Preview Recording
+          </h3>
+
           <audio
             controls
             src={URL.createObjectURL(audioBlob)}
-            className="w-64 mt-2 rounded-lg"
+            className="w-full"
           />
-          <div className="mt-4 flex items-center gap-4 justify-center">
+
+          <div className="mt-6 flex flex-wrap gap-3">
+
             <button
               onClick={uploadToS3}
-              className="px-6 py-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition"
+              disabled={uploading}
+              className="flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Share Anonymously
+              {uploading ? (
+                <>
+                  <Loader2
+                    size={18}
+                    className="animate-spin"
+                  />
+                  Uploading...
+                </>
+              ) : (
+                <>
+                  <Upload size={18} />
+                  Share Whisper
+                </>
+              )}
             </button>
+
             <button
               onClick={resetRecording}
-              className="px-6 py-2 bg-gray-700 text-white rounded-full hover:bg-gray-600 transition"
+              disabled={uploading}
+              className="flex items-center gap-2 rounded-xl border border-zinc-300 px-5 py-3 transition hover:bg-zinc-100"
             >
+              <RotateCcw size={18} />
               Record Again
             </button>
+
           </div>
         </div>
       )}

@@ -5,7 +5,7 @@ import axios from "axios";
 const RegisterForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [error, setError] = useState("");
@@ -13,7 +13,7 @@ const RegisterForm = () => {
 
   async function registerUser(e) {
     e.preventDefault();
-    setError(""); 
+    setError("");
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -27,18 +27,24 @@ const RegisterForm = () => {
     try {
       const response = await axios.post(
         "http://localhost:8000/api/auth/register",
-        { username, password, email }
+        { username, password, email },
       );
-      localStorage.setItem("token", response.data.token); 
+      localStorage.setItem("token", response.data.token);
       setUsername("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-      
+
       navigate("/signin"); // Redirect to dashboard
     } catch (error) {
+      console.log(error.response?.status);
+      console.log(error.response?.data);
+      console.log(error);
+
       setError(
-        error.response?.data?.error || "Something went wrong. Try again."
+        error.response?.data?.error ||
+          error.response?.data?.message ||
+          "Something went wrong.",
       );
     }
   }
@@ -55,9 +61,7 @@ const RegisterForm = () => {
         <p className="text-sm text-gray-600">
           Signup now to create your Q&A links!
         </p>
-        {error && (
-          <p className="text-sm text-red-500 text-center">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-500 text-center">{error}</p>}
         <input
           type="text"
           placeholder="Username"
