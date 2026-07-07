@@ -11,8 +11,9 @@ router.post("/generate", isLoggedIn, async (req,res)=>{
 
     const suffix = Date.now() + '-' + Math.random().toString(36).substr(2, 6);
     const url_id = loginUser.username + suffix 
-
-    const generate_url = `http://localhost:5173/${url_id}`
+    
+    const PORT = 8080 // as per docker or localhost 
+    const generate_url = `http://localhost:${PORT}/${url_id}`;
     
     // optional check
     const urlExists = await generatedLinks.findOne({linkId: url_id})

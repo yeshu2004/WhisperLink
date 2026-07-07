@@ -3,7 +3,8 @@ const generatedLinks = require("../models/generatedLinks");
 const linkData =  async (req, res) => {
   try {
     console.log(req.params.linkName);
-    const fullUrl = `http://localhost:5173/${req.params.linkName}`;
+    const PORT = 8080; // frontend port i.e docker mapping or localhost:5173
+    const fullUrl = `http://localhost:${PORT}/${req.params.linkName}`;
     console.log(fullUrl);
 
     const linkData = await generatedLinks
