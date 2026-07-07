@@ -9,9 +9,7 @@
 ## Screenshots
 
 <img width="1470" height="880" alt="Screenshot 2026-07-08 at 1 18 50 AM" src="https://github.com/user-attachments/assets/263df313-d27c-43c2-be6c-d1cca0001019" />
-<img width="1470" height="880" alt="Screenshot 2026-07-08 at 1 19 48 AM" src="https://github.com/user-attachments/assets/2c999005-3cb5-4d34-95c3-640d7ebc774a" />
 <img width="1470" height="881" alt="Screenshot 2026-07-08 at 1 20 56 AM" src="https://github.com/user-attachments/assets/599e2ca9-10cb-45f6-bb0f-7ab9932e6fae" />
-<img width="1470" height="880" alt="Screenshot 2026-07-08 at 1 20 06 AM" src="https://github.com/user-attachments/assets/389b4031-e052-4de6-9b4b-31ff2d5d5c61" />
 
 ---
 
