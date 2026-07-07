@@ -68,6 +68,16 @@
      AWS_REGION=your_region
      ```
 
+   - Create SECRET_KEY:
+   ```bash 
+   echo "SECRET_KEY=$(openssl rand -hex 32)" >> .env
+   ``` 
+
+   - Create JWT_SECRET:
+   ```bash 
+    echo "JWT_SECRET=$(openssl rand -base64 64)" > .env
+   ``` 
+
    - Start the backend:
      ```bash
      npm start
